@@ -18,7 +18,7 @@ RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(encrypt:(NSString *)data key:(NSString *)
     NSError *error = nil;
     NSString *base64 = [AesCrypt encrypt:data key:key iv:iv algorithm:algorithm];
     if (base64 == nil) {
-        reject @"Encrypt error";
+        return @"Encrypt error";
     } else {
         return base64;
     }
