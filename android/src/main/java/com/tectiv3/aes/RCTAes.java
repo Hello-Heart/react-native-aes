@@ -59,7 +59,7 @@ public class RCTAes extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    public void encrypt(String data, String key, String iv, String algorithm, Promise promise) {
+    public String encrypt(String data, String key, String iv, String algorithm) {
         try {
             String result = encrypt(data, key, iv, algorithm.toLowerCase().contains("cbc")?CIPHER_CBC_ALGORITHM:CIPHER_CTR_ALGORITHM);
             return result;
@@ -69,7 +69,7 @@ public class RCTAes extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod(isBlockingSynchronousMethod = true)
-    public void decrypt(String data, String pwd, String iv, String algorithm, Promise promise) {
+    public String decrypt(String data, String pwd, String iv, String algorithm) {
         try {
             String strs = decrypt(data, pwd, iv, algorithm.toLowerCase().contains("cbc")?CIPHER_CBC_ALGORITHM:CIPHER_CTR_ALGORITHM);
             return strs;
@@ -223,7 +223,7 @@ public class RCTAes extends ReactContextBaseJavaModule {
         byte[] key = Hex.decode(hexKey);
         SecretKey secretKey = new SecretKeySpec(key, KEY_ALGORITHM);
 
-        Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+        Cipher cipher = Cipher.getInstance(CIPHER_CBC_ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, hexIv == null ? emptyIvSpec : new IvParameterSpec(Hex.decode(hexIv)));
         byte[] encrypted = cipher.doFinal(text.getBytes("UTF-8"));
         return Base64.encodeToString(encrypted, Base64.NO_WRAP);
@@ -237,7 +237,7 @@ public class RCTAes extends ReactContextBaseJavaModule {
         byte[] key = Hex.decode(hexKey);
         SecretKey secretKey = new SecretKeySpec(key, KEY_ALGORITHM);
 
-        Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+        Cipher cipher = Cipher.getInstance(CIPHER_CBC_ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, secretKey, hexIv == null ? emptyIvSpec : new IvParameterSpec(Hex.decode(hexIv)));
         byte[] decrypted = cipher.doFinal(Base64.decode(ciphertext, Base64.NO_WRAP));
         return new String(decrypted, "UTF-8");
