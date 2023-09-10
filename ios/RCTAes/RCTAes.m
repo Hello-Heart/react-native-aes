@@ -14,27 +14,23 @@
 
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(encrypt:(NSString *)data key:(NSString *)key iv:(NSString *)iv algorithm:(NSString *)algorithm
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(encrypt:(NSString *)data key:(NSString *)key iv:(NSString *)iv algorithm:(NSString *)algorithm) {
     NSError *error = nil;
     NSString *base64 = [AesCrypt encrypt:data key:key iv:iv algorithm:algorithm];
     if (base64 == nil) {
-        reject(@"encrypt_fail", @"Encrypt error", error);
+        reject @"Encrypt error";
     } else {
-        resolve(base64);
+        return base64;
     }
 }
 
-RCT_EXPORT_METHOD(decrypt:(NSString *)base64 key:(NSString *)key iv:(NSString *)iv algorithm:(NSString *)algorithm
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(decrypt:(NSString *)base64 key:(NSString *)key iv:(NSString *)iv algorithm:(NSString *)algorithm) {
     NSError *error = nil;
     NSString *data = [AesCrypt decrypt:base64 key:key iv:iv algorithm:algorithm];
     if (data == nil) {
-        reject(@"decrypt_fail", @"Decrypt failed", error);
+        return @"Decrypt failed";
     } else {
-        resolve(data);
+        return data;
     }
 }
 
@@ -127,15 +123,13 @@ RCT_EXPORT_METHOD(randomUuid:(RCTPromiseResolveBlock)resolve
     }
 }
 
-RCT_EXPORT_METHOD(randomKey:(NSInteger)length
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_BLOCKING_SYNCHRONOUS_METHOD(randomKey:(NSInteger)length) {
     NSError *error = nil;
     NSString *data = [AesCrypt randomKey:length];
     if (data == nil) {
-        reject(@"random_fail", @"Random key error", error);
+        return @"Random key error";
     } else {
-        resolve(data);
+        return data;
     }
 }
 
