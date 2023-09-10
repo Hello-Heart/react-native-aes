@@ -58,23 +58,23 @@ public class RCTAes extends ReactContextBaseJavaModule {
         return "RCTAes";
     }
 
-    @ReactMethod
+    @ReactMethod(isBlockingSynchronousMethod = true)
     public void encrypt(String data, String key, String iv, String algorithm, Promise promise) {
         try {
             String result = encrypt(data, key, iv, algorithm.toLowerCase().contains("cbc")?CIPHER_CBC_ALGORITHM:CIPHER_CTR_ALGORITHM);
-            promise.resolve(result);
+            return result;
         } catch (Exception e) {
-            promise.reject("-1", e.getMessage());
+            return e.getMessage();
         }
     }
 
-    @ReactMethod
+    @ReactMethod(isBlockingSynchronousMethod = true)
     public void decrypt(String data, String pwd, String iv, String algorithm, Promise promise) {
         try {
             String strs = decrypt(data, pwd, iv, algorithm.toLowerCase().contains("cbc")?CIPHER_CBC_ALGORITHM:CIPHER_CTR_ALGORITHM);
-            promise.resolve(strs);
+            return strs;
         } catch (Exception e) {
-            promise.reject("-1", e.getMessage());
+            return e.getMessage();
         }
     }
 
