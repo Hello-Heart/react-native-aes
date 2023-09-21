@@ -61,7 +61,7 @@ public class RCTAes extends ReactContextBaseJavaModule {
     @ReactMethod(isBlockingSynchronousMethod = true)
     public String encrypt(String data, String key, String iv, String algorithm) {
         try {
-            String result = encrypt(data, key, iv, algorithm.toLowerCase().contains("cbc")?CIPHER_CBC_ALGORITHM:CIPHER_CTR_ALGORITHM);
+            String result = _encrypt(data, key, iv, algorithm.toLowerCase().contains("cbc")?CIPHER_CBC_ALGORITHM:CIPHER_CTR_ALGORITHM);
             return result;
         } catch (Exception e) {
             return e.getMessage();
@@ -71,7 +71,7 @@ public class RCTAes extends ReactContextBaseJavaModule {
     @ReactMethod(isBlockingSynchronousMethod = true)
     public String decrypt(String data, String pwd, String iv, String algorithm) {
         try {
-            String strs = decrypt(data, pwd, iv, algorithm.toLowerCase().contains("cbc")?CIPHER_CBC_ALGORITHM:CIPHER_CTR_ALGORITHM);
+            String strs = _decrypt(data, pwd, iv, algorithm.toLowerCase().contains("cbc")?CIPHER_CBC_ALGORITHM:CIPHER_CTR_ALGORITHM);
             return strs;
         } catch (Exception e) {
             return e.getMessage();
@@ -215,7 +215,7 @@ public class RCTAes extends ReactContextBaseJavaModule {
 
     final static IvParameterSpec emptyIvSpec = new IvParameterSpec(new byte[] {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00});
 
-    private static String encrypt(String text, String hexKey, String hexIv, String algorithm) throws Exception {
+    private static String _encrypt(String text, String hexKey, String hexIv, String algorithm) throws Exception {
         if (text == null || text.length() == 0) {
             return null;
         }
@@ -229,7 +229,7 @@ public class RCTAes extends ReactContextBaseJavaModule {
         return Base64.encodeToString(encrypted, Base64.NO_WRAP);
     }
 
-    private static String decrypt(String ciphertext, String hexKey, String hexIv, String algorithm) throws Exception {
+    private static String _decrypt(String ciphertext, String hexKey, String hexIv, String algorithm) throws Exception {
         if(ciphertext == null || ciphertext.length() == 0) {
             return null;
         }
